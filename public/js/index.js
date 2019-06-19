@@ -13,5 +13,9 @@ $('textarea').keydown(function (e)
 });
 socket.on('chat message', function(msg) {
    console.log('msg from server: ', msg);
-   $('#messages').append($('<li>').text(msg));
+   $('#messages').append($('<span>').text('Anon:')).append($('<li>').text(msg));
+});
+
+$('registerForm').on('submit', function() {
+   console.log('here');
 })

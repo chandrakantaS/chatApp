@@ -2,22 +2,22 @@
 <head>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
   <style>
-  body{
-    font-family: 'Open Sans', sans-serif;
-    margin: 0 auto 0 auto;
-    width:100%;
-    text-align:center;
-    margin: 20px 0px 20px 0px;
-  }
+    body{
+      font-family: 'Open Sans', sans-serif;
+      margin: 0 auto 0 auto;
+      width:100%;
+      text-align:center;
+      margin: 20px 0px 20px 0px;
+    }
 
-  /* p{
+    /* p{
     font-size:12px;
     text-decoration: none;
     color:#ffffff;
   } */
 
   a {
-      text-decoration: none
+    text-decoration: none
   }
 
 
@@ -96,26 +96,37 @@
   #btn2:hover{
     background:#3594D2;
   }
-  </style>
+</style>
 
 </head>
 <body>
 
 
-  <form name="loginForm" method="post" action="/login">
+  <form name="registerForm" method="post" action="/login/register">
     <div class="box">
-      <h1>Login form</h1>
-
+      <h1>Register form</h1>
+      <input type="text" placeholder="name" name="name" class="email" />
       <input type="text" placeholder="username" name="username" class="email" />
-      <input type="text" placeholder="password" name="pass" class="email" />
-      <button type="submit" value="Submit" class="btn">Sign In</button>
+      <input type="text" placeholder="password" name="pass1" class="email" />
+      <input type="text" placeholder="confirm password" name="pass2" class="email" />
+      <button type="submit" value="Submit" class="btn">Submit</button>
 
     </div>
 
   </form>
-
-  <p>New user! <a href="/login/register">Register</a></p>
-
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $('form').on('submit', function() {
+      var pass1 = $("input[name*='pass1']").val();;
+      var pass2 = $("input[name*='pass2']").val();
+      if(pass1 !== pass2) {
+        alert('Password mismatch');
+        return false;
+
+      }
+      console.log(pass1, pass2)
+    })
+  </script>
+
 </body>
 </html>
