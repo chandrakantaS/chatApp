@@ -5,7 +5,8 @@ const loginRoute = require('./routes/login');
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const port = 5000;
-
+const connect = require('./db/connect');
+const Chat = require('./db/chatModel');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
@@ -20,6 +21,13 @@ io.on("connection", (socket)=>{
   })
   socket.on('chat message', function(msg){
     console.log('message: ' + msg);
+
+    connect.then(() => {
+      let chatMessage = new Chat({ msg: msg, from: "Anonymous" });
+
+      chatMessage.save();
+    })
+
     io.emit('chat message', msg);
   });
 });
@@ -32,6 +40,15 @@ io.on("connection", (socket)=>{
 
 app.get('/', (req, res) => {
   res.render('index', {login: false})
+});
+app.get('/msg', (req, res) => {
+  connect.then(db => {
+    // let data = Chats.find({ message: "Anonymous" });
+    Chat.find({}).then(chat => {
+      res.json(chat);
+    });
+  });
+  console.log('request for messages');
 })
 app.use('/login', loginRoute)
 

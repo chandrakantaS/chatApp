@@ -1,23 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const connect = mongoose.connect('mongodb://localhost:27017/chatapp', {useNewUrlParser: true})
-const Schema = mongoose.Schema;
-const userSchema = new Schema({
-  name: {
-    type: String
-  },
-  username: {
-    type: String
-  },
-  password: {
-    type: String
-  }
-});
-let User = mongoose.model('User', userSchema);
+const connect = require('../db/connect');
+const User = require('../db/userModel');
 
 router.get('/', function(req, res, next) {
-  res.render('login');
+  res.render('login', {msg: ''});
 });
 router.get('/register', (req, res, next) => {
   res.render('register');
@@ -29,11 +16,11 @@ router.post('/', function(req, res, next) {
     console.log('DB connected: ', req.body);
     User.find({username: req.body.username}).then(user => {
       console.log('user: ', user);
-      if(user[0].password === req.body.pass) {
+      if(user && user[0] && user[0].password === req.body.pass) {
         res.render('index', {login: true, user: req.body.username})
       } else {
         console.log('error auth');
-        res.status(403).redirect('/login')
+        res.render('login', {msg: 'Failed to login'})
       }
     })
   })
@@ -48,7 +35,7 @@ router.post('/register', (req, res, next) => {
       password: req.body.pass1
     });
     nUser.save();
-    res.redirect('/');
+    res.render('login', {msg: 'Registration Success'});
   })
 })
 
